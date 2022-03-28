@@ -2,7 +2,9 @@
 // @name        Open Files PR
 // @namespace   Violentmonkey Scripts
 // @match       https://github.com/odoo/odoo/pull/*
+// @match       https://github.com/odoo/enterprise/pull/* 
 // @exclude-match https://github.com/odoo/odoo/pull/*/files
+// @exclude-match https://github.com/odoo/enterprise/pull/*/files
 // @grant       none
 // @version     1.0
 // @author      Yolann Sabaux
@@ -17,14 +19,17 @@ window.addEventListener('load', () => {
   const title = document.querySelector('.gh-header-number')
   const el = document.createElement('button')
   const url = document.URL.concat('/files')
+  
   let styleObject = {
-    width: '100px',
+    width: '120px',
     left: '15px',
     background: '#0077ff',
   }
-  Object.assign(el.style, styleObject) ;
-  el.innerText = 'Open Files'
+  Object.assign(el.style, styleObject)
+  
+  el.innerText = 'Files Changed'
   el.classList.add('btn', 'btn-primary')
+  
   el.addEventListener('click', (e) => {
     window.open(url, '_blank').focus();
   })
