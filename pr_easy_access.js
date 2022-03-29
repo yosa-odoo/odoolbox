@@ -6,7 +6,7 @@
 // @exclude-match https://github.com/odoo/odoo/pull/*/files
 // @exclude-match https://github.com/odoo/enterprise/pull/*/files
 // @grant       none
-// @version     1.3
+// @version     1.4
 // @author      Yolann Sabaux
 // @description 3/28/2022, 3:58:38 PM
 // ==/UserScript==
@@ -15,64 +15,87 @@ function insertAfter(newNode, existingNode) {
     existingNode.parentNode.insertBefore(newNode, existingNode.nextSibling);
 }
 
-window.addEventListener('load', () => {
-  let styleObject = {
-    width: '120px',
-    left: '15px',
-  }  
+function createButton({text, styleB, classesB}) {
+    const classes = classesB || []
+    const style = styleB || {}
+    const button = document.createElement('button')
+    button.append(new Text(text || ''))
+    Object.entries(style).forEach(([attribute, value]) => button.style[attribute] = value)
+    button.classList.add(...classes)
+    return button
+}
+
+function addEasyAccess(){
   
-  // Copy Branch button
-  const files_button = document.createElement('button')
-  Object.assign(files_button.style, styleObject)
-  files_button.style.background= '#0077ff'
-  files_button.innerText = 'Files Changed'
-  files_button.classList.add('btn', 'btn-primary')
+    // 'Changed Files' button
+  const filesButton = createButton({
+    text: 'Files Changed',
+    styleB: {
+      background: '#0077ff',
+      width: '120px',
+      left: '15px',
+    },
+    classesB: ['btn', 'btn-primary']
+  })
   
-  files_button.addEventListener('click', (e) => {
+  filesButton.addEventListener('click', (e) => {
     const url = document.URL.concat('/files')
     window.open(url, '_blank').focus();
   })
   
-  const title = document.querySelector('.gh-header-number')
-  insertAfter(files_button, title)
+  // 'Copy Branch' button
+  const copyButton = createButton({
+    text: 'Copy Branch',
+    styleB: {
+      width: '120px',
+      left: '30px',
+    },
+    classesB: ['btn', 'btn-primary']
+  })
   
-  // Changed Files button
-  const copy_button = document.createElement('button')
-  Object.assign(copy_button.style, styleObject)
-  copy_button.style.left = '30px'
-  copy_button.innerText = 'Copy Branch'
-  copy_button.classList.add('btn', 'btn-primary')
-  
-  copy_button.addEventListener('click', (e) => {
+  copyButton.addEventListener('click', (e) => {
     copyText = document.querySelector('.text-emphasized').text;
     navigator.clipboard.writeText(copyText);
   })
   
-  insertAfter(copy_button, files_button)
-  
-  // Top Bottom Button
-  const topButton = document.createElement('button')
-  const bottomButton = document.createElement('button')
-  topButton.innerText = 'Top'
-  bottomButton.innerText = 'Bottom'
-  
-  topButton.style.left = '60px'
-  bottomButton.style.left = '50px'
-  topButton.style.width = '70px'
-  bottomButton.style.width = '70px'
-  topButton.classList.add("btn", "btn-block", "btn-sm")
-  bottomButton.classList.add("btn", "btn-block", "btn-sm")
-  
-  bottomButton.addEventListener('click', (e) => {
-    window.scrollTo(0, document.body.scrollHeight);
+  // 'Top' Button
+  const topButton = createButton({
+    text: 'Top',
+    styleB: {
+      width: '70px',
+      left: '60px',
+    },
+    classesB: ['btn', 'btn-block', 'btn-sm']
   })
   
   topButton.addEventListener('click', (e) => {
     window.scrollTo(0, 0);
   })
   
+  // 'Bottom' Button
+  const bottomButton = createButton({
+    text: 'Bottom',
+    styleB: {
+      width: '70px',
+      left: '50px',
+    },
+    classesB: ['btn', 'btn-block', 'btn-sm']
+  })
   
-  insertAfter(bottomButton, copy_button)
-  insertAfter(topButton, bottomButton)
+  bottomButton.addEventListener('click', (e) => {
+    window.scrollTo(0, document.body.scrollHeight);
+  })
+ 
   
-})
+  // insert buttons
+  const title = document.querySelector('.gh-header-number')
+  insertAfter(filesButton, title)
+  insertAfter(copyButton, filesButton)
+  insertAfter(bottomButton, copyButton)
+  insertAfter(topButton, bottomButton)    
+  
+}
+
+window.addEventListener('load', addEasyAccess)
+window.addEventListener("message", addEasyAccess)
+window.addEventListener('pjax:end', addEasyAccess)
