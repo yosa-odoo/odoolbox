@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name        Facilitator PR
+// @name        PR - Quick Access
 // @namespace   Violentmonkey Scripts
 // @match       https://github.com/odoo/odoo/pull/*
 // @match       https://github.com/odoo/enterprise/pull/* 
@@ -8,7 +8,8 @@
 // @grant       none
 // @version     1.4
 // @author      Yolann Sabaux
-// @description 3/28/2022, 3:58:38 PM
+// @description Create Buttons to ease access in a PR. 3/28/2022, 3:58:38 PM
+// Github: https://github.com/yosa-odoo/odoolbox/blob/main/pr_easy_access.js
 // ==/UserScript==
 
 function insertAfter(newNode, existingNode) {
@@ -31,11 +32,10 @@ function addEasyAccess(){
   const filesButton = createButton({
     text: 'Files Changed',
     styleB: {
-      background: '#0077ff',
       width: '120px',
       left: '15px',
     },
-    classesB: ['btn', 'btn-primary']
+    classesB: ['btn-outline', 'btn-sm', 'btn', 'ml-2']
   })
   
   filesButton.addEventListener('click', (e) => {
@@ -48,9 +48,9 @@ function addEasyAccess(){
     text: 'Copy Branch',
     styleB: {
       width: '120px',
-      left: '30px',
+      left: '15px',
     },
-    classesB: ['btn', 'btn-primary']
+    classesB: ['btn-outline', 'btn-sm', 'btn', 'ml-2']
   })
   
   copyButton.addEventListener('click', (e) => {
@@ -63,13 +63,13 @@ function addEasyAccess(){
     text: 'Top',
     styleB: {
       width: '70px',
-      left: '60px',
+      left: '50px',
     },
     classesB: ['btn', 'btn-block', 'btn-sm']
   })
   
   topButton.addEventListener('click', (e) => {
-    window.scrollTo(0, 0);
+    window.scrollTo(0, 300);
   })
   
   // 'Bottom' Button
@@ -77,7 +77,7 @@ function addEasyAccess(){
     text: 'Bottom',
     styleB: {
       width: '70px',
-      left: '50px',
+      left: '60px',
     },
     classesB: ['btn', 'btn-block', 'btn-sm']
   })
@@ -91,11 +91,9 @@ function addEasyAccess(){
   const title = document.querySelector('.gh-header-number')
   insertAfter(filesButton, title)
   insertAfter(copyButton, filesButton)
-  insertAfter(bottomButton, copyButton)
-  insertAfter(topButton, bottomButton)    
+  insertAfter(topButton, copyButton)
+  insertAfter(bottomButton, topButton)    
   
 }
 
 window.addEventListener('load', addEasyAccess)
-window.addEventListener("message", addEasyAccess)
-window.addEventListener('pjax:end', addEasyAccess)
