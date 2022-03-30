@@ -56,7 +56,11 @@ function addEasyAccess(){
   copyButton.addEventListener('click', (e) => {
     copyText = document.querySelector('.text-emphasized').text;
     navigator.clipboard.writeText(copyText);
-  })
+    copyButton.textContent = "Branch copied !";
+                        setTimeout(()=>{
+                            copyButton.textContent = "Copy Branch";
+                        }, 1000)
+                    });
   
   // 'Top' Button
   const topButton = createButton({
